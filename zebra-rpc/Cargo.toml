@@ -23,6 +23,7 @@ categories = [
 exclude = ["*.proto"]
 
 [features]
+default = ["tx_v6"]
 tx_v6 = ["zebra-chain/tx_v6", "zebra-state/tx_v6", "zebra-consensus/tx_v6"]
 
 # Production features that activate extra dependencies, or extra features in

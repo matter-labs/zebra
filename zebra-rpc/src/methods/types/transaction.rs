@@ -657,10 +657,13 @@ impl TransactionObject {
                     } => Input::NonCoinbase {
                         txid: outpoint.hash.encode_hex(),
                         vout: outpoint.index,
+                        // TODO: this is not strictly correct, should probably be reflected in the API
                         script_sig: ScriptSig {
-                            asm: zcash_script::script::Code(unlock_script.as_raw_bytes().to_vec())
-                                .to_asm(false),
-                            hex: unlock_script.clone(),
+                            asm: zcash_script::script::Code(
+                                unlock_script.to_script().as_raw_bytes().to_vec(),
+                            )
+                            .to_asm(false),
+                            hex: unlock_script.to_script(),
                         },
                         sequence: *sequence,
                         value: None,
@@ -687,13 +690,13 @@ impl TransactionObject {
                         n: output.0 as u32,
                         script_pub_key: ScriptPubKey {
                             asm: zcash_script::script::Code(
-                                output.1.lock_script.as_raw_bytes().to_vec(),
+                                output.1.lock_script.to_script().as_raw_bytes().to_vec(),
                             )
                             .to_asm(false),
-                            hex: output.1.lock_script.clone(),
+                            hex: output.1.lock_script.to_script().clone(),
                             req_sigs,
                             r#type: zcash_script::script::Code(
-                                output.1.lock_script.as_raw_bytes().to_vec(),
+                                output.1.lock_script.to_script().as_raw_bytes().to_vec(),
                             )
                             .to_component()
                             .ok()

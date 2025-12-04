@@ -44,6 +44,7 @@ tracing = { workspace = true }
 tempfile = { workspace = true }
 
 [features]
+default = ["tx_v6"]
 tx_v6 = []
 
 [lints]

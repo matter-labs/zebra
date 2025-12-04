@@ -3073,7 +3073,7 @@ fn mock_transparent_transfer(
 
     let previous_output = transparent::Output {
         value: previous_output_value,
-        lock_script,
+        lock_script: lock_script.into(),
     };
 
     let previous_utxo = transparent::OrderedUtxo::new(previous_output, previous_utxo_height, 1);
@@ -3081,7 +3081,7 @@ fn mock_transparent_transfer(
     // Use the `previous_outpoint` as input
     let input = transparent::Input::PrevOut {
         outpoint: previous_outpoint,
-        unlock_script: accepting_script,
+        unlock_script: accepting_script.into(),
         sequence: 0,
     };
 
@@ -3089,7 +3089,7 @@ fn mock_transparent_transfer(
     // Using the rejecting script pretends the amount is burned because it can't be spent again
     let output = transparent::Output {
         value: Amount::try_from(1).expect("1 is an invalid amount"),
-        lock_script: rejecting_script,
+        lock_script: rejecting_script.into(),
     };
 
     // Cache the source of the fund so that it can be used during verification
@@ -3121,7 +3121,7 @@ fn mock_coinbase_transparent_output(
     // Using the rejecting script pretends the amount is burned because it can't be spent again
     let output = transparent::Output {
         value: Amount::try_from(1).expect("1 is an invalid amount"),
-        lock_script: rejecting_script,
+        lock_script: rejecting_script.into(),
     };
 
     (input, output)

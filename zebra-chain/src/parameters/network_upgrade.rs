@@ -5,6 +5,7 @@ use NetworkUpgrade::*;
 use crate::block;
 use crate::parameters::{Network, Network::*};
 use crate::serialization::BytesInDisplayOrder;
+use zcash_protocol::consensus::BranchId;
 
 use std::collections::{BTreeMap, HashMap};
 use std::fmt;
@@ -161,6 +162,27 @@ impl BytesInDisplayOrder<false, 4> for ConsensusBranchId {
     }
 }
 
+impl TryInto<BranchId> for NetworkUpgrade {
+    type Error = crate::Error;
+
+    fn try_into(self) -> Result<BranchId, crate::Error> {
+        match self {
+            NetworkUpgrade::Sapling => Ok(BranchId::Sapling),
+            NetworkUpgrade::Blossom => Ok(BranchId::Blossom),
+            NetworkUpgrade::Heartwood => Ok(BranchId::Heartwood),
+            NetworkUpgrade::Canopy => Ok(BranchId::Canopy),
+            NetworkUpgrade::Nu5 => Ok(BranchId::Nu5),
+            NetworkUpgrade::Nu6 => Ok(BranchId::Nu6),
+            NetworkUpgrade::Nu6_1 => Ok(BranchId::Nu6_1),
+            #[cfg(zcash_unstable = "nu7")]
+            NetworkUpgrade::Nu7 => Ok(BranchId::Nu7),
+            #[cfg(zcash_unstable = "zfuture")]
+            NetworkUpgrade::ZFuture => Ok(BranchId::ZFuture),
+            _ => Err(crate::Error::InvalidConsensusBranchId),
+        }
+    }
+}
+
 impl From<ConsensusBranchId> for u32 {
     fn from(branch: ConsensusBranchId) -> u32 {
         branch.0
@@ -208,11 +230,11 @@ impl fmt::Display for ConsensusBranchId {
     }
 }
 
-impl TryFrom<ConsensusBranchId> for zcash_primitives::consensus::BranchId {
+impl TryFrom<ConsensusBranchId> for zcash_protocol::consensus::BranchId {
     type Error = crate::Error;
 
     fn try_from(id: ConsensusBranchId) -> Result<Self, Self::Error> {
-        zcash_primitives::consensus::BranchId::try_from(u32::from(id))
+        zcash_protocol::consensus::BranchId::try_from(u32::from(id))
             .map_err(|_| Self::Error::InvalidConsensusBranchId)
     }
 }
@@ -236,8 +258,8 @@ pub(crate) const CONSENSUS_BRANCH_IDS: &[(NetworkUpgrade, ConsensusBranchId)] = 
     (Nu5, ConsensusBranchId(0xc2d6d0b4)),
     (Nu6, ConsensusBranchId(0xc8e71055)),
     (Nu6_1, ConsensusBranchId(0x4dec4df0)),
-    // TODO: set below to (Nu7, ConsensusBranchId(0x77190ad8)), once the same value is set in librustzcash
-    #[cfg(any(test, feature = "zebra-test"))]
+    // #[cfg(any(test, feature = "zebra-test"))]
+    #[cfg(zcash_unstable = "nu7")]
     (Nu7, ConsensusBranchId(0xffffffff)),
     #[cfg(zcash_unstable = "zfuture")]
     (ZFuture, ConsensusBranchId(0xffffffff)),

@@ -488,9 +488,17 @@ where
                 Self::check_maturity_height(&network, &req, &spent_utxos)?;
             }
 
+            // Verify TZE extension IDs consistency.
+            check::tze_extension_ids_consistent(&tx, req.known_utxos(), &spent_utxos)?;
+
             let nu = req.upgrade(&network);
             let cached_ffi_transaction =
-                Arc::new(CachedFfiTransaction::new(tx.clone(), Arc::new(spent_outputs), nu).map_err(|_| TransactionError::UnsupportedByNetworkUpgrade(tx.version(), nu))?);
+                Arc::new(CachedFfiTransaction::new(
+                    tx.clone(),
+                    Arc::new(spent_outputs),
+                    nu,
+                    req.height()
+                ).map_err(|_| TransactionError::UnsupportedByNetworkUpgrade(tx.version(), nu))?);
 
             tracing::trace!(?tx_id, "got state UTXOs");
 
@@ -517,7 +525,7 @@ where
                     script_verifier,
                     cached_ffi_transaction.clone(),
                 )?,
-                #[cfg(all(zcash_unstable = "nu7", feature = "tx_v6"))]
+                #[cfg(all(any(zcash_unstable = "nu7", zcash_unstable = "zfuture"), feature = "tx_v6"))]
                 Transaction::V6 {
                     ..
                 } => Self::verify_v6_transaction(
@@ -556,7 +564,7 @@ where
             let value_balance = tx.value_balance(&spent_utxos);
 
             let zip233_amount = match *tx {
-            	#[cfg(all(zcash_unstable = "nu7", feature = "tx_v6"))]
+            	#[cfg(all(any(zcash_unstable = "nu7", zcash_unstable = "zfuture"), feature = "tx_v6"))]
                 Transaction::V6{ .. } => tx.zip233_amount(),
                 _ => Amount::zero()
             };
@@ -1031,7 +1039,10 @@ where
     }
 
     /// Passthrough to verify_v5_transaction, but for V6 transactions.
-    #[cfg(all(zcash_unstable = "nu7", feature = "tx_v6"))]
+    #[cfg(all(
+        any(zcash_unstable = "nu7", zcash_unstable = "zfuture"),
+        feature = "tx_v6"
+    ))]
     fn verify_v6_transaction(
         request: &Request,
         network: &Network,

@@ -1205,7 +1205,7 @@ async fn mempool_reject_non_standard() -> Result<(), Report> {
     let tx_mut = Arc::make_mut(&mut tx);
     *tx_mut.outputs_mut() = vec![transparent::Output {
         value: Amount::new(10), // this is below the dust threshold
-        lock_script: transparent::Script::new(vec![1, 2, 3].as_slice()),
+        lock_script: transparent::Script::new(vec![1, 2, 3].as_slice()).into(),
     }];
     last_transaction.transaction.transaction = tx;
 

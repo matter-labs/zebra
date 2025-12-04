@@ -53,11 +53,11 @@ features = [
 
 [features]
 # In release builds, don't compile debug logging code, to improve performance.
-default-release-binaries = ["release_max_level_info", "progress-bar", "prometheus", "sentry"]
+default-release-binaries = ["release_max_level_info", "progress-bar", "prometheus"]
 
 
 # Default features for official ZF binary release builds
-default = ["default-release-binaries"]
+default = ["default-release-binaries", "tx_v6", "internal-miner"]
 
 # Production features that activate extra dependencies, or extra features in dependencies
 
