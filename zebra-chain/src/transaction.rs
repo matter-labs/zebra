@@ -422,11 +422,11 @@ impl Transaction {
             Transaction::V3 { .. } => 3,
             Transaction::V4 { .. } => 4,
             Transaction::V5 { .. } => 5,
-            #[cfg(all(
-                any(zcash_unstable = "nu7", zcash_unstable = "zfuture"),
-                feature = "tx_v6"
-            ))]
+            #[cfg(all(zcash_unstable = "nu7", feature = "tx_v6"))]
             Transaction::V6 { .. } => 6,
+            // TODO: here we reuse tx format 6 for simplicity, but we should introduce a new format.
+            #[cfg(all(zcash_unstable = "zfuture", feature = "tx_v6"))]
+            Transaction::V6 { .. } => 0x0000_FFFF,
         }
     }
 

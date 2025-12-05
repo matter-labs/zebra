@@ -997,7 +997,8 @@ impl ZcashDeserialize for Transaction {
                 any(zcash_unstable = "nu7", zcash_unstable = "zfuture"),
                 feature = "tx_v6"
             ))]
-            (6, true) => {
+            // TODO: should have a new transaction type instead.
+            (6 | 0x0000_FFFF, true) => {
                 // Denoted as `nVersionGroupId` in the spec.
                 let id = limited_reader.read_u32::<LittleEndian>()?;
                 if id != TX_V6_VERSION_GROUP_ID {
