@@ -53,7 +53,7 @@ const TESTNET_GENESIS_HASH: &str =
 
 /// The halving height interval in the regtest is 6 hours.
 /// [zcashd regtest halving interval](https://github.com/zcash/zcash/blob/v5.10.0/src/consensus/params.h#L252)
-const PRE_BLOSSOM_REGTEST_HALVING_INTERVAL: HeightDiff = 144;
+const PRE_BLOSSOM_REGTEST_HALVING_INTERVAL: HeightDiff = 100_000; // TODO: Virtually isable halving for testing
 
 /// Configurable funding stream recipient for configured Testnets.
 #[derive(Serialize, Deserialize, Clone, Debug)]

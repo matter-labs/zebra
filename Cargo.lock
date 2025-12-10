@@ -6577,6 +6577,7 @@ dependencies = [
  "blake2b_simd",
  "zcash_primitives",
  "zcash_protocol",
+ "zcash_transparent",
 ]
 
 [[package]]
