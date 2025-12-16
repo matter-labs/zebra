@@ -1,3 +1,45 @@
+# Matter Labs fork of [zebra](https://github.com/ZcashFoundation/zebra).
+
+This fork was created to showcase the prospects of using a TZE to implement
+a trustless bridge between Zcash and Ethereum.
+
+## Usage notes
+
+To build `zebra` with all the required changes, run the following command:
+
+```sh
+RUSTFLAGS="--cfg zcash_unstable=\"zfuture\"" cargo build --release --features tx_v6,internal-miner
+```
+
+After that, you can access the built binary in `./targed/release/zebrad`.
+
+For an end-to-end flow, check the [bridge repository](https://github.com/matter-labs/zcash_eth_bridge).
+
+## Changes made
+
+Most of the changes introduced in the repository are related to exposing
+TZE as a part of the submittable transaction, with additional changes made
+to simplify local development (e.g. changing consensus rules).
+
+The changes made are not proposed for the production-ready implementation,
+the main priority during development was the speed of prototyping. In case
+the prototype is considered viable, a formal TZE to specify new consensus
+rules is to be created, and a new (proper) implementation is to be written.
+
+Otherwise, the main implementation changes are in the [librustzcash repository](https://github.com/matter-labs/librustzcash/tree/popzxc-prototype).
+
+For a full list of changes, see [the diff](https://github.com/ZcashFoundation/zebra/compare/main...matter-labs:zebra:popzxc-prototype).
+
+## Acknowlegements
+
+This work was partially based on the [fork of zebra](https://github.com/Ztarknet/zebra/tree/zfuture)
+made by [Starkware](https://starkware.co/). Parts of the code from the linked fork were used
+in this repository.
+Both original repository and Starkware's fork are double-licensed under [MIT](https://github.com/Ztarknet/zebra/blob/zfuture/LICENSE-MIT)
+and [Apache 2.0](https://github.com/Ztarknet/zebra/blob/zfuture/LICENSE-APACHE) licenses.
+
+---
+
 ![Zebra logotype](https://zfnd.org/wp-content/uploads/2022/03/zebra-logotype.png)
 
 ---
